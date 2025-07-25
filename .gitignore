@@ -1,0 +1,41 @@
+# MacOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+
+# Editor files
+.vscode/
+.idea/
+*.sublime-*
+
+# Log files
+*.log
+
+# Cache directories
+node_modules/
+.cache/
+
+# Build artifacts (if any)
+dist/
+build/
+
+# Don't ignore the core presentation files
+!index.html
+!wrangleai_presentation.html
+!README.md
+!DEPLOYMENT_GUIDE.md 

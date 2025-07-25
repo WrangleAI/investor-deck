@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WrangleAI - Enterprise AI Cost and Usage Visibility and Control</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+        
+        /* Password Protection Styles */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        .password-form {
+            background: rgba(40, 36, 37, 0.9);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .password-form h2 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .password-form p {
+            color: #a855f7;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Lexend', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .password-submit {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Lexend', sans-serif;
+        }
+        
+        .password-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(124, 58, 237, 0.4);
+        }
+        
+        .password-error {
+            color: #ef4444;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .wrangleai-logo {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wrangleai-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.4));
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            overflow-x: auto;
+            overflow-y: hidden;
+            height: 100vh;
+            color: #ffffff;
+        }
+
+        .presentation-container {
+            display: flex;
+            height: 100vh;
+            scroll-snap-type: x mandatory;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem 4rem;
+            scroll-snap-align: start;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            color: white;
+            max-height: calc(100vh - 6rem);
+            overflow-y: auto;
+        }
+
+        /* Slide-specific backgrounds - Dark theme with brand colors */
+        .slide-1 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-2 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-3 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-4 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-5 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-6 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-7 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-8 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-9 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-10 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-11 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+        .slide-12 { background: linear-gradient(135deg, #1a1a1a 0%, #282425 100%); }
+        .slide-13 { background: linear-gradient(135deg, #282425 0%, #1a1a1a 100%); }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #7c3aed;
+        }
+
+        h4 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+
+        p, li {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .quote {
+            font-style: italic;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            border-left: 5px solid #7c3aed;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #7c3aed;
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.3);
+        }
+
+        .feature-card h4 {
+            color: #7c3aed;
+            margin-bottom: 1rem;
+        }
+
+        .market-numbers {
+            display: flex;
+            justify-content: space-around;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .market-circle {
+            background: rgba(40, 36, 37, 0.6);
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            margin: 1rem;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .market-circle:hover {
+            border-color: #7c3aed;
+            transform: scale(1.05);
+        }
+
+        .market-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+
+        .market-label {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .competitor-table {
+            background: rgba(40, 36, 37, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow-x: auto;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .competitor-row {
+            display: grid;
+            grid-template-columns: 2fr 2fr 2fr 2fr;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .competitor-header {
+            background: #7c3aed;
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0;
+        }
+
+
+
+
+
+        .differentiator-card {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .differentiator-card:hover {
+            border-color: #7c3aed;
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(124, 58, 237, 0.4);
+            background: rgba(124, 58, 237, 0.1);
+        }
+
+        .differentiator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .differentiator-card:hover::before {
+            left: 100%;
+        }
+
+        .differentiator-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));
+        }
+
+        .differentiator-card h4 {
+            color: #7c3aed;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .differentiator-card p {
+            color: #e5e5e5;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #7c3aed, #a855f7);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            display: inline-block;
+            margin: 0.5rem;
+            font-weight: bold;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        .funding-ask {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+            margin: 3rem 0;
+        }
+
+        .funding-amount {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .funding-amount:hover {
+            border-color: #7c3aed;
+            transform: scale(1.02);
+        }
+
+        .big-number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #7c3aed;
+        }
+
+        .timeline-phase {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1rem;
+            backdrop-filter: blur(10px);
+            min-width: 300px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-phase:hover {
+            border-color: #7c3aed;
+            transform: translateY(-2px);
+        }
+
+        .timeline-phase h3 {
+            color: #7c3aed;
+        }
+
+        .team-card {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 800px;
+            margin: 2rem auto;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .team-card h3 {
+            color: #7c3aed;
+            margin-bottom: 1.5rem;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(40, 36, 37, 0.8);
+            padding: 1rem;
+            border-radius: 50px;
+            color: white;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        ul {
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            padding-left: 1rem;
+            color: #e5e5e5;
+        }
+
+        .contact-info {
+            background: rgba(40, 36, 37, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            margin: 2rem 0;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .contact-info h3 {
+            color: #7c3aed;
+            margin-bottom: 1.5rem;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 1.5rem 1rem;
+            }
+            
+            .slide-content {
+                padding: 0.5rem 0 !important;
+                max-height: calc(100vh - 3rem) !important;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 1rem !important;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+                margin-bottom: 1rem !important;
+            }
+            
+            h3 {
+                font-size: 1.3rem;
+                margin: 1rem 0 !important;
+            }
+            
+            p, li {
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .competitor-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+
+            
+            .market-numbers {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .market-circle {
+                width: 160px !important;
+                height: 160px !important;
+            }
+            
+            .market-value {
+                font-size: 1.5rem !important;
+            }
+
+            /* Mobile responsiveness for founder images */
+            .quote {
+                flex-direction: column !important;
+                text-align: center !important;
+                padding: 1rem !important;
+            }
+            
+            .quote div:first-child {
+                text-align: center !important;
+            }
+            
+            /* Team slide mobile */
+            .slide-10 div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            .team-card > div {
+                flex-direction: column !important;
+                text-align: center;
+                gap: 1.5rem !important;
+            }
+            
+            .team-card img, .team-card > div > div:first-child > div {
+                width: 80px !important;
+                height: 80px !important;
+                margin: 0 auto !important;
+            }
+            
+            .team-card h3 {
+                font-size: 1.1rem !important;
+            }
+            
+            .team-card h4 {
+                font-size: 0.9rem !important;
+            }
+            
+            .team-card p {
+                font-size: 0.85rem !important;
+            }
+            
+            /* Experience text mobile */
+            .team-card div[style*="Previous Experience"] div {
+                font-size: 0.7rem !important;
+                margin-bottom: 0.3rem !important;
+            }
+            
+            .team-card div[style*="Previous Experience"] p {
+                font-size: 0.75rem !important;
+                text-align: center !important;
+            }
+
+            /* Mobile responsiveness for differentiators */
+            .slide-7 div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                max-width: 350px !important;
+            }
+            
+            .differentiator-card {
+                min-height: 140px !important;
+                padding: 1.5rem 1rem !important;
+            }
+            
+            .differentiator-icon {
+                font-size: 2.2rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+            
+            .differentiator-card[style*="grid-column"] {
+                grid-column: 1 / span 1 !important;
+            }
+            
+            .differentiator-card h4 {
+                font-size: 1.1rem !important;
+            }
+            
+            .differentiator-card p {
+                font-size: 0.9rem !important;
+            }
+            
+            /* Revenue forecast mobile */
+            .slide-9 div[style*="grid-template-columns: 2fr repeat(6, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 0.3rem !important;
+                text-align: center !important;
+            }
+            
+            .slide-9 div[style*="display: flex; justify-content: center"] {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                align-items: center !important;
+            }
+            
+            .slide-9 div[style*="min-width: 140px"] {
+                min-width: 200px !important;
+                padding: 0.8rem !important;
+            }
+            
+            .slide-9 h2 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+            
+            .slide-9 div[style*="max-width: 1000px"] {
+                max-width: 350px !important;
+                padding: 1rem !important;
+            }
+            
+            .slide-9 div[style*="font-size: 0.85rem"] {
+                font-size: 0.7rem !important;
+                padding: 0.3rem !important;
+            }
+            
+            .slide-9 div[style*="font-size: 0.8rem"] {
+                font-size: 0.7rem !important;
+            }
+            
+            .slide-9 div[style*="font-size: 0.75rem"] {
+                font-size: 0.65rem !important;
+            }
+            
+            /* Roadmap mobile */
+            .slide-8 div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+                position: static !important;
+            }
+            
+            .slide-8 div[style*="grid-template-columns: repeat(5, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 0.8rem !important;
+            }
+            
+            .slide-8 div[style*="position: absolute"] {
+                display: none !important;
+            }
+            
+            .timeline-phase {
+                min-width: auto !important;
+                padding: 1rem !important;
+                position: static !important;
+                z-index: auto !important;
+            }
+            
+            .slide-8 div[style*="background: linear-gradient(135deg, #4c1d95, #7c3aed)"] {
+                padding: 0.8rem !important;
+                margin-top: 1rem !important;
+            }
+            
+            .slide-8 h5 {
+                font-size: 0.6rem !important;
+            }
+            
+            .slide-8 h4[style*="font-size: 0.75rem"] {
+                font-size: 0.65rem !important;
+            }
+            
+            .slide-8 ul[style*="font-size: 0.5rem"] {
+                font-size: 0.45rem !important;
+            }
+            
+            .slide-9 div[style*="font-size: 0.65rem"] {
+                font-size: 0.6rem !important;
+                height: 24px !important;
+            }
+            
+            .slide-9 ul[style*="font-size: 0.55rem"] {
+                font-size: 0.5rem !important;
+            }
+            
+            .slide-9 ul[style*="font-size: 0.6rem"] {
+                font-size: 0.55rem !important;
+            }
+            
+            /* Funding ask mobile */
+            .funding-ask {
+                flex-direction: column !important;
+                gap: 2rem !important;
+            }
+            
+            .funding-amount {
+                padding: 2rem !important;
+            }
+            
+            /* Logo sizing on mobile */
+            .slide-1 > div > div:first-child img {
+                height: 100px !important;
+            }
+            
+            .slide-13 img {
+                height: 80px !important;
+            }
+            
+            .slide-1 .subtitle {
+                font-size: 1.3rem !important;
+            }
+            
+            /* Graphics slides mobile responsive */
+            .slide-3 > div > div,
+            .slide-4 > div > div > div,
+            .slide-5 > div > div,
+            .slide-7 > div > div {
+                flex-direction: column !important;
+                gap: 2rem !important;
+                text-align: center !important;
+            }
+            
+            .slide-3 img,
+            .slide-4 img,
+            .slide-5 img,
+            .slide-7 img {
+                height: 200px !important;
+                margin: 0 auto !important;
+            }
+            
+            .slide-4 > div > div > div > div:first-child {
+                text-align: left !important;
+            }
+            
+            /* Competitor slide mobile */
+            .slide-6 div[style*="grid-template-columns: 1.5fr 1.5fr 2fr 2fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 0.3rem !important;
+                text-align: center !important;
+            }
+            
+            .slide-6 div[style*="grid-template-columns: repeat(3, 1fr)"] {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            .slide-6 div[style*="font-size: 0.75rem"] {
+                font-size: 0.65rem !important;
+                padding: 0.3rem !important;
+            }
+            
+            .slide-6 div[style*="font-size: 0.7rem"] {
+                font-size: 0.6rem !important;
+            }
+            
+            .slide-6 div[style*="font-size: 0.65rem"] {
+                font-size: 0.55rem !important;
+            }
+            
+            .slide-6 div[style*="padding: 1.5rem 1rem"] {
+                padding: 1rem 0.5rem !important;
+            }
+            
+            .slide-6 h3[style*="font-size: 1.2rem"] {
+                font-size: 1rem !important;
+            }
+            
+            .slide-6 h4[style*="font-size: 0.9rem"] {
+                font-size: 0.8rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Password Protection Overlay -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-form">
+            <div class="wrangleai-logo">
+                <img src="brand elements/whitelogo.png" alt="WrangleAI Logo">
+            </div>
+            <h2>Investor Deck</h2>
+            <p>Enter the access code to view the presentation</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="Enter access code" autocomplete="off">
+            <button class="password-submit" onclick="checkPassword()">Access Presentation</button>
+            <div class="password-error" id="passwordError">Incorrect access code. Please try again.</div>
+        </div>
+    </div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <section class="slide slide-1">
+            <div class="slide-content">
+                <div style="margin-bottom: 3rem;">
+                    <img src="brand elements/whitelogo.png" alt="WrangleAI Logo" style="height: 140px; width: auto; filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.4));">
+                </div>
+                <p class="subtitle" style="font-size: 1.8rem; margin-bottom: 2rem;">Enterprise AI Cost and Usage Visibility and Control</p>
+                <div class="highlight" style="margin-top: 3rem; font-size: 1.5rem;">Pre-Seed Investor Deck</div>
+            </div>
+        </section>
+
+        <!-- Slide 2: Vision -->
+        <section class="slide slide-2">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <h2 style="margin-bottom: 1.5rem;">Vision</h2>
+                <h3 style="font-size: 1.8rem; margin: 1.5rem 0;">AI Is The Most Powerful Tool Of Our Generation — And The Most Opaque.</h3>
+                <p style="font-size: 1.3rem; margin: 1.5rem 0;">WrangleAI's vision is to bring <span class="highlight">visibility, control, and efficiency</span> to the world's AI usage.</p>
+                <p style="font-size: 1.2rem; margin-bottom: 2rem;">We believe every organization should be able to harness the full power of AI — without losing sight of cost, accuracy, speed, or responsibility.</p>
+                
+                <div class="quote" style="display: flex; align-items: center; gap: 2rem; text-align: left; padding: 1.5rem; margin: 0;">
+                    <div style="flex: 1;">
+                        <p style="font-size: 1rem; line-height: 1.4; margin-bottom: 1rem;">"I've worked with C-suite level stakeholders for almost 10 years, I routinely hear about cloud and AI being the wild west. WrangleAI is here to help executives gain control and enable innovation"</p>
+                        <p style="text-align: right; margin: 0; font-size: 0.9rem;"><strong>— Dave, Our Founder</strong></p>
+                    </div>
+                    <div style="flex-shrink: 0;">
+                        <img src="1.png" alt="Dave Maddock - Founder" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #7c3aed; box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: What We Are -->
+        <section class="slide slide-3">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <div style="display: flex; align-items: center; gap: 3rem; max-width: 1000px; margin: 0 auto;">
+                    <div style="flex: 1;">
+                        <h2 style="margin-bottom: 1.5rem;">What We Are</h2>
+                        <h3 style="font-size: 2rem; margin: 1.5rem 0;">WrangleAI is the control center for AI usage.</h3>
+                        
+                        <div style="font-size: 1.2rem; line-height: 1.6; margin: 2rem 0;">
+                            <p>As AI adoption explodes, companies are <span class="highlight">flying blind</span> on spend, model usage, and operational efficiency.</p>
+                            <p style="margin: 1.5rem 0;">WrangleAI changes that providing visibility into model costs, usage and performance.</p>
+                            <p>We enable leadership to get <span class="highlight">cost and performance control</span> of their AI deployments, optimizing across the critical tradeoffs of cost, accuracy, and speed.</p>
+                        </div>
+                    </div>
+                    <div style="flex-shrink: 0;">
+                        <img src="brand elements/WrAI-analyzer.png" alt="WrangleAI Analyzer" style="height: 240px; width: auto; filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.3));">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Why Now -->
+        <section class="slide slide-4">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <h2 style="margin-bottom: 1rem;">Why Now?</h2>
+                <div style="display: flex; align-items: flex-start; gap: 2.5rem; max-width: 1100px; margin: 0 auto;">
+                    <div style="flex: 1; text-align: left;">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">The Cloud Parallel</h3>
+                        <p style="margin-bottom: 1rem; font-size: 1rem;">Cloud infrastructure was rapidly adopted throughout the 2010s, enabling faster development and scale — but most organizations failed to implement governance and cost controls early on.</p>
+                        
+                        <div class="features-grid" style="margin: 1rem 0; grid-template-columns: 1fr 1fr;">
+                            <div class="feature-card" style="padding: 1rem;">
+                                <h4 style="font-size: 1.1rem;">📊 80% of companies</h4>
+                                <p style="font-size: 0.9rem;">Overspent on cloud budgets by 20–50% (Gartner, 2021)</p>
+                            </div>
+                            <div class="feature-card" style="padding: 1rem;">
+                                <h4 style="font-size: 1.1rem;">📈 Only 27% of orgs</h4>
+                                <p style="font-size: 0.9rem;">Had mature cost optimization practices (FinOps Foundation)</p>
+                            </div>
+                        </div>
+
+                        <h3 style="color: #7c3aed; margin: 1rem 0 0.5rem 0; font-size: 1.5rem;">The Same Pattern with AI - But Accelerated</h3>
+                        
+                        <!-- Quantified Problem Statements -->
+                        <div style="background: rgba(124, 58, 237, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem 0; border-left: 4px solid #7c3aed;">
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; font-size: 0.9rem;">
+                                <div>
+                                    <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed; margin-bottom: 0.3rem;">73%</div>
+                                    <div style="color: #e5e5e5;">of enterprises lack AI cost visibility (Deloitte 2024)</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed; margin-bottom: 0.3rem;">40%</div>
+                                    <div style="color: #e5e5e5;">average overspend on AI inference (McKinsey 2024)</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <ul style="font-size: 1rem; margin-bottom: 1rem;">
+                            <li><strong>AI Usage is exploding:</strong> 65% of large enterprises now actively using AI (Accenture)</li>
+                            <li><strong>Blind deployment:</strong> Teams deploy LLMs across chatbots, co-pilots, analytics without governance</li>
+                            <li><strong>Missing control layer:</strong> AI is becoming business-critical, yet operational controls lag behind</li>
+                            <li><strong>Cost spiral risk:</strong> Without visibility, AI spend can grow 300-500% annually unchecked</li>
+                        </ul>
+                    </div>
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; align-items: center;">
+                        <img src="brand elements/WrAI-Explainer.png" alt="WrangleAI Explainer" style="height: 200px; width: auto; filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.3));">
+                    </div>
+                </div>
+                
+                <div class="quote" style="margin-top: 1rem; padding: 1rem;">
+                    <p style="font-size: 0.95rem;">"WrangleAI is born out of pain points I've seen in my work across enterprises over the last 6 months... Its go time for AI Cost Governance solutions"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Market Opportunity -->
+        <section class="slide slide-5">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <div style="display: flex; align-items: center; gap: 2.5rem; max-width: 1100px; margin: 0 auto;">
+                    <div style="flex: 1;">
+                        <h2 style="margin-bottom: 1rem;">Market Opportunity</h2>
+                        <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem;">AI Cost Management & Optimization</h3>
+                        
+                        <div class="market-numbers" style="margin: 1.5rem 0; justify-content: space-between;">
+                            <div class="market-circle" style="width: 150px; height: 150px;">
+                                <div class="market-value" style="font-size: 1.3rem;">$45B</div>
+                                <div class="market-label" style="font-size: 0.8rem;">Total Addressable Market</div>
+                                <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">TAM</div>
+                            </div>
+                            <div class="market-circle" style="width: 150px; height: 150px;">
+                                <div class="market-value" style="font-size: 1.3rem;">$12B</div>
+                                <div class="market-label" style="font-size: 0.8rem;">Serviceable Available Market</div>
+                                <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">SAM</div>
+                            </div>
+                            <div class="market-circle" style="width: 150px; height: 150px;">
+                                <div class="market-value" style="font-size: 1.3rem;">$360M</div>
+                                <div class="market-label" style="font-size: 0.8rem;">Serviceable Obtainable Market</div>
+                                <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">SOM</div>
+                            </div>
+                        </div>
+
+                        <!-- Supporting Data Points -->
+                        <div style="text-align: left; max-width: 800px; margin: 1rem auto;">
+                            <ul style="font-size: 0.95rem; line-height: 1.4;">
+                                <li><strong>Enterprise AI spending: $150B annually, growing 27% CAGR</strong> (Forrester, eWeek Research)</li>
+                                <li><strong>30-40% of AI spend is wasted</strong> through inefficient optimization (McKinsey)</li>
+                                <li><strong>65% of large enterprises actively using AI</strong>, 35% facing cost optimization challenges (Accenture)</li>
+                                <li><strong>AI Data Management market: $25.1B → $70.2B by 2028</strong>, 22.8% CAGR (MarketsandMarkets)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Revenue vs Market Size Clarification -->
+                        <div style="background: rgba(124, 58, 237, 0.1); padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 800px; border-left: 4px solid #7c3aed;">
+                            <p style="font-size: 0.85rem; margin: 0; font-style: italic; color: #e5e5e5;">
+                                <strong>TAM Methodology:</strong> $150B annual enterprise AI spend × 30% requiring optimization = $45B defensible addressable market. Our revenue projections (Year 1: £179K, Year 3: £4.95M) reflect conservative execution against this opportunity, targeting just 0.01% of TAM by Year 3.
+                            </p>
+                        </div>
+                    </div>
+                    <div style="flex-shrink: 0;">
+                        <img src="brand elements/BoyandBot.png" alt="Boy and Bot" style="height: 250px; width: auto; filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.3));">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Revenue Model -->
+        <section class="slide slide-6">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 0.5rem 0;">
+                <h2 style="margin-bottom: 0.8rem; font-size: 2rem;">Revenue Growth Forecast (Yr 1-3)</h2>
+                
+                <!-- Value Proposition Data with 3rd Party Sources -->
+                <div style="background: rgba(124, 58, 237, 0.1); padding: 1rem; border-radius: 10px; margin: 0 auto 1rem auto; max-width: 1000px; border-left: 4px solid #7c3aed;">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 0.8rem; color: #7c3aed; text-align: center;">Market Validation: Quantified Customer Pain Points</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; font-size: 0.85rem;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">30-40%</div>
+                            <div style="color: #e5e5e5;">AI spend wasted on inefficient prompts and over-provisioning</div>
+                            <div style="font-size: 0.7rem; color: #a855f7; margin-top: 0.3rem;">(McKinsey AI Report 2024)</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">73%</div>
+                            <div style="color: #e5e5e5;">Of enterprises lack visibility into AI costs across teams</div>
+                            <div style="font-size: 0.7rem; color: #a855f7; margin-top: 0.3rem;">(Deloitte State of AI 2024)</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">$500K-$2M</div>
+                            <div style="color: #e5e5e5;">Average annual AI spend per large enterprise</div>
+                            <div style="font-size: 0.7rem; color: #a855f7; margin-top: 0.3rem;">(Forrester Enterprise AI Survey 2024)</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 0.8rem; font-size: 0.9rem; color: #e5e5e5;">
+                        <strong>WrangleAI Target Impact:</strong> 15-30% AI spend reduction through optimization and visibility • Enhanced performance through balanced cost-accuracy-speed optimization
+                    </div>
+                </div>
+                
+                <!-- Commercial Model Overview -->
+                <div style="background: rgba(124, 58, 237, 0.05); padding: 1rem; border-radius: 10px; margin: 0 auto 1rem auto; max-width: 1000px; border: 1px solid rgba(124, 58, 237, 0.2);">
+                    <h4 style="font-size: 1rem; margin-bottom: 0.8rem; color: #7c3aed; text-align: center;">Tiered SaaS + Usage-Based Revenue Model</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; font-size: 0.8rem; text-align: center;">
+                        <div>
+                            <div style="font-weight: bold; color: #ffffff; margin-bottom: 0.3rem;">Developers: £19/mo</div>
+                            <div style="color: #e5e5e5; font-size: 0.7rem;">Basic tracking + 2 Optimised Keys</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; color: #ffffff; margin-bottom: 0.3rem;">Growth: £199/mo</div>
+                            <div style="color: #e5e5e5; font-size: 0.7rem;">Full features + 5 Optimised Keys</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: bold; color: #ffffff; margin-bottom: 0.3rem;">Enterprise: £997+/mo</div>
+                            <div style="color: #e5e5e5; font-size: 0.7rem;">Unlimited + Infrastructure tracking</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 0.8rem; font-size: 0.75rem; color: #a855f7;">
+                        <strong>Optimised AI Keys:</strong> Base model cost + 20-30% uplift for intelligent routing and governance
+                    </div>
+                </div>
+
+                <!-- Detailed Revenue Forecast Table -->
+                <div style="background: rgba(40, 36, 37, 0.6); border-radius: 15px; padding: 1.5rem; margin: 0 auto; max-width: 1000px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                    
+                    <!-- Table Header -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; text-align: center;">
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Revenue Stream</div>
+                        <div style="background: #2d2d2d; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Year 1</div>
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Accounts</div>
+                        <div style="background: #2d2d2d; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Year 2</div>
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Accounts</div>
+                        <div style="background: #2d2d2d; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Year 3</div>
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Accounts</div>
+                    </div>
+
+                    <!-- Developers Tier -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; margin-bottom: 0.7rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold;">Developers Tier</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£46K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">200 paid</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£137K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">600 paid</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£274K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">1,200 paid</div>
+                    </div>
+
+                    <!-- Growth Tier -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; margin-bottom: 0.7rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold;">Growth Tier</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£95K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">40</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£501K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">210</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£1.41M</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">590</div>
+                    </div>
+
+                    <!-- Enterprise Tier -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; margin-bottom: 0.7rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold;">Enterprise Tier</div>
+                        <div style="text-align: center; font-size: 0.8rem; color: #a855f7;">—</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">0</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£239K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">20</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£958K</div>
+                        <div style="text-align: center; font-size: 0.75rem; color: #e5e5e5;">80</div>
+                    </div>
+
+                    <!-- Usage-Based Revenue -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; margin-bottom: 1rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border-radius: 6px; font-size: 0.8rem; font-weight: bold;">Usage Revenue (Optimised Keys)</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£38K</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #a855f7;">Early adoption</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£485K</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #a855f7;">Growing usage</div>
+                        <div style="text-align: center; font-size: 0.8rem; font-weight: bold; color: #ffffff;">£2.31M</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #a855f7;">High adoption</div>
+                    </div>
+
+                    <!-- Total Revenue (Highlighted) -->
+                    <div style="display: grid; grid-template-columns: 2fr repeat(6, 1fr); gap: 0.5rem; border-top: 2px solid #7c3aed; padding-top: 1rem; align-items: center;">
+                        <div style="background: #7c3aed; color: white; padding: 0.7rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">Total Revenue</div>
+                        <div style="background: #2d2d2d; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">£179K</div>
+                        <div style="background: #7c3aed; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">~240 total</div>
+                        <div style="background: #2d2d2d; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">£1.36M</div>
+                        <div style="background: #7c3aed; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">~830 total</div>
+                        <div style="background: #2d2d2d; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.85rem; font-weight: bold;">£4.95M</div>
+                        <div style="background: #7c3aed; color: white; text-align: center; padding: 0.7rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">~1,870 total</div>
+                    </div>
+                </div>
+
+                <!-- Key Growth Metrics -->
+                <div style="display: flex; justify-content: center; gap: 2rem; margin-top: 1rem;">
+                    <div style="text-align: center; background: rgba(124, 58, 237, 0.2); padding: 1rem; border-radius: 10px; min-width: 140px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">264%</div>
+                        <div style="font-size: 0.8rem; color: #e5e5e5;">YoY Growth (Yr 2-3)</div>
+                    </div>
+                    <div style="text-align: center; background: rgba(124, 58, 237, 0.2); padding: 1rem; border-radius: 10px; min-width: 140px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">£2,650</div>
+                        <div style="font-size: 0.8rem; color: #e5e5e5;">ARPU by Year 3</div>
+                    </div>
+                    <div style="text-align: center; background: rgba(124, 58, 237, 0.2); padding: 1rem; border-radius: 10px; min-width: 140px;">
+                        <div style="font-size: 1.5rem; font-weight: bold; color: #7c3aed;">66%</div>
+                        <div style="font-size: 0.8rem; color: #e5e5e5;">Usage Revenue Mix (Yr 3)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Competitors -->
+        <section class="slide slide-7">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <h2 style="margin-bottom: 1.5rem;">Competitor Landscape</h2>
+                
+                <!-- Comprehensive Competitor Table -->
+                <div style="background: rgba(40, 36, 37, 0.6); border-radius: 15px; padding: 1rem; margin: 0 auto; max-width: 1000px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                    
+                    <!-- Table Header -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.8rem; text-align: center;">
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">Company</div>
+                        <div style="background: #2d2d2d; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">Focus</div>
+                        <div style="background: #7c3aed; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">Strengths</div>
+                        <div style="background: #2d2d2d; color: white; padding: 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: bold;">Weaknesses against WrangleAI</div>
+                    </div>
+
+                    <!-- AI Spend -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">AI Spend</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">OpenAI usage tracking</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Clear token/cost tracking, good for finance teams</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Single-provider only, no model grouping or insights</div>
+                    </div>
+
+                    <!-- helicone -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">helicone</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">LLM API monitoring</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Fast setup, OpenAI-ready, dev-friendly</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Limited visibility, lacks team/org views</div>
+                    </div>
+
+                    <!-- PromptLayer -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">PromptLayer</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Prompt logging & versioning</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Dev-centric, useful for experimentation</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">No multi-provider view, no cost optimization</div>
+                    </div>
+
+                    <!-- arize -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">arize</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">ML observability</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Real-time drift detection, model metrics</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Not built for GenAI or token-based AI workloads</div>
+                    </div>
+
+                    <!-- WHYLABS -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">WHYLABS</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Data pipeline monitoring</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Good for structured data, anomaly detection</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Not built for LLMs, lacks cost/usage layer</div>
+                    </div>
+
+                    <!-- Weights & Biases -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">Weights & Biases</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Experiment tracking</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Popular with ML engineers, strong training integrations</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Training-focused, no inference observability</div>
+                    </div>
+
+                    <!-- traceloop -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">traceloop</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">LLM tracing & observability</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Lightweight, open-source friendly</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Early-stage, limited enterprise depth</div>
+                    </div>
+
+                    <!-- CLOUDZERO -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">CLOUDZERO</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Cloud FinOps</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Broad cloud spend monitoring</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Generic insights, not AI-native, lacks model awareness</div>
+                    </div>
+
+                    <!-- DataDog -->
+                    <div style="display: grid; grid-template-columns: 1.5fr 1.5fr 2fr 2fr; gap: 0.5rem; margin-bottom: 0.8rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 0.4rem; border-radius: 6px; font-size: 0.7rem; font-weight: bold;">DataDog</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Infra observability</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Powerful enterprise tools, integrations</div>
+                        <div style="text-align: center; font-size: 0.65rem; color: #e5e5e5;">Overkill for AI teams, lacks token/model context</div>
+                    </div>
+                </div>
+
+                <!-- WrangleAI Value Proposition -->
+                <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1rem; border-radius: 15px; margin: 1rem 0; text-align: center;">
+                    <p style="font-weight: bold; font-size: 0.9rem; margin: 0; color: white;">WrangleAI delivers a complete package of AI Cost and Usage features for businesses. Unlike other tools we aim to be a central piece of AI observability for the CIO. It is also our intention to be a cost leader in this space, giving businesses a platform that can scale with their AI growth.</p>
+                </div>
+
+                <!-- Core Differentiators Grid -->
+                <h3 style="text-align: center; margin: 1rem 0 0.8rem 0; font-size: 1.2rem; color: #7c3aed;">Our Key Differentiators</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 900px; margin: 0 auto;">
+                    <!-- Row 1 -->
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">🔄</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">Native Multi-Model Support</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Visualize usage across OpenAI, Anthropic, Google, and others</p>
+                    </div>
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">📊</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">Synthetic Groups</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Custom usage grouping by team, product, model, or API</p>
+                    </div>
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">🧠</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">AI-Powered Optimization</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Balance cost-accuracy-speed tradeoffs: smart model routing, context optimization, performance tuning</p>
+                    </div>
+                    <!-- Row 2 -->
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">👥</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">Cross-Team Visibility</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Centralized UI for devs, ops, product, and finance</p>
+                    </div>
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">🎯</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">Built for AI</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Not repurposed ML tools — designed for token-based AI workloads</p>
+                    </div>
+                    <div style="background: rgba(40, 36, 37, 0.6); padding: 1.5rem 1rem; border-radius: 15px; backdrop-filter: blur(10px); text-align: center; border: 1px solid rgba(124, 58, 237, 0.2); transition: all 0.3s ease;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem; filter: drop-shadow(0 4px 8px rgba(124, 58, 237, 0.3));">💰</div>
+                        <h4 style="font-size: 0.9rem; margin-bottom: 0.8rem;">Cost Leadership</h4>
+                        <p style="font-size: 0.75rem; margin: 0; line-height: 1.3;">Competitive pricing with enterprise-grade features</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Why we Win - Differentiators -->
+        <section class="slide slide-8">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 0.5rem 0; overflow-y: auto;">
+                <h2 style="margin-bottom: 1rem; font-size: 2.2rem;">Why We Win: Key Differentiators</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: #e5e5e5; text-align: center;">How WrangleAI dominates the competitive landscape through unique advantages</p>
+                
+                <div style="display: flex; align-items: flex-start; gap: 2rem; max-width: 1200px; margin: 0 auto;">
+                    <!-- Left Content -->
+                    <div style="flex: 2;">
+                                                 <!-- Founding Team Advantage -->
+                         <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; text-align: center;">
+                             <h3 style="font-size: 1.3rem; margin-bottom: 0.8rem; color: white;">🎯 Founding Team: Unmatched Enterprise AI Operations Expertise</h3>
+                             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; font-size: 0.85rem; color: white;">
+                                 <div>
+                                     <strong>Dave Maddock (Founder):</strong><br/>
+                                     • 10 years cloud architecture, 4+ years Cloud FinOps at enterprise scale<br/>
+                                     • Ex-military precision meets AI operational reality<br/>
+                                     • Direct enterprise network: Monzo, Deloitte, Vodafone, VirginMedia O2, HSBC
+                                 </div>
+                                 <div>
+                                     <strong>Kevin Thompson (Strategic Advisor):</strong><br/>
+                                     • C-level enterprise AI strategy consultant<br/>
+                                     • <strong>Fortune 500 Client Portfolio:</strong> Boeing, Rolls Royce, GM, Ford, Ministry of Defence<br/>
+                                     • 15+ years advising on digital transformation at the highest levels
+                                 </div>
+                             </div>
+                             <div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.15); border-radius: 10px; font-size: 0.8rem;">
+                                 <strong>🔗 Combined Network Effect:</strong> Direct access to C-suite decision makers across aerospace, automotive, defense, financial services, and telecommunications - representing our ideal customer base.
+                             </div>
+                         </div>
+
+                        <!-- Core Product Differentiators -->
+                        <h3 style="color: #7c3aed; margin-bottom: 1rem; font-size: 1.2rem;">🏆 Product Differentiators That Matter</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div class="differentiator-card" style="min-height: 120px; padding: 1.2rem;">
+                                <div class="differentiator-icon">🔄</div>
+                                <h4>Optimised AI Keys</h4>
+                                <p>Revolutionary proxy architecture with smart model routing. 20-30% cost savings through intelligent request optimization.</p>
+                            </div>
+                            <div class="differentiator-card" style="min-height: 120px; padding: 1.2rem;">
+                                <div class="differentiator-icon">📊</div>
+                                <h4>Synthetic Groups</h4>
+                                <p>Flexible cost attribution by team, product, or use case. No competitor offers this level of organizational visibility.</p>
+                            </div>
+                            <div class="differentiator-card" style="min-height: 120px; padding: 1.2rem;">
+                                <div class="differentiator-icon">🌐</div>
+                                <h4>True Multi-Model Native</h4>
+                                <p>Built from ground up for OpenAI, Anthropic, Google, Azure, AWS. Competitors are single-provider or retrofit solutions.</p>
+                            </div>
+                            <div class="differentiator-card" style="min-height: 120px; padding: 1.2rem;">
+                                <div class="differentiator-icon">🧠</div>
+                                <h4>AI Network Insights</h4>
+                                <p>Aggregate anonymized usage data to provide industry benchmarks and AI adoption recommendations - unique value proposition.</p>
+                            </div>
+                        </div>
+
+                        <!-- Go-To-Market Advantages -->
+                        <h3 style="color: #7c3aed; margin-bottom: 1rem; font-size: 1.2rem;">🚀 Strategic Execution Advantages</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;">
+                            <div class="differentiator-card" style="min-height: 100px; padding: 1rem;">
+                                <div class="differentiator-icon" style="font-size: 2rem;">⚡</div>
+                                <h4 style="font-size: 1rem;">Speed to Market</h4>
+                                <p style="font-size: 0.85rem;">6 weeks concept-to-commercial vs 6+ months for competitors</p>
+                            </div>
+                            <div class="differentiator-card" style="min-height: 100px; padding: 1rem;">
+                                <div class="differentiator-icon" style="font-size: 2rem;">💰</div>
+                                <h4 style="font-size: 1rem;">Cost Leadership</h4>
+                                <p style="font-size: 0.85rem;">£19/mo entry vs £500+ for DataDog, Arize, enterprise competitors</p>
+                            </div>
+                            <div class="differentiator-card" style="min-height: 100px; padding: 1rem;">
+                                <div class="differentiator-icon" style="font-size: 2rem;">🎯</div>
+                                <h4 style="font-size: 1rem;">AI-First Design</h4>
+                                <p style="font-size: 0.85rem;">Purpose-built for GenAI workloads, not retrofitted ML tools</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Content - Dashboard Image -->
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                        <img src="brand elements/WrangleDashboard.png" alt="WrangleAI Dashboard" style="width: 100%; max-width: 300px; height: auto; border-radius: 15px; border: 2px solid rgba(124, 58, 237, 0.3); box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4); filter: drop-shadow(0 6px 20px rgba(124, 58, 237, 0.3));">
+                        
+                        <!-- Competitive Moat -->
+                        <div style="background: rgba(40, 36, 37, 0.8); padding: 1.5rem; border-radius: 15px; margin-top: 1.5rem; border: 1px solid rgba(124, 58, 237, 0.3); backdrop-filter: blur(10px);">
+                            <h4 style="color: #7c3aed; margin-bottom: 1rem; text-align: center; font-size: 1.1rem;">🛡️ Competitive Moat</h4>
+                            <ul style="font-size: 0.85rem; line-height: 1.4; color: #e5e5e5; text-align: left;">
+                                <li><strong>Network Effects:</strong> More customers = better AI insights for all</li>
+                                <li><strong>Data Advantage:</strong> Cross-industry usage patterns create switching costs</li>
+                                <li><strong>Enterprise Relationships:</strong> Pre-built trust with F500 decision makers</li>
+                                <li><strong>Technical Depth:</strong> Proxy architecture creates lock-in through value</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Roadmap Competitive Advantage -->
+                <div style="background: rgba(124, 58, 237, 0.1); padding: 1.2rem; border-radius: 15px; margin-top: 1rem; border-left: 4px solid #7c3aed; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                    <h4 style="color: #7c3aed; margin-bottom: 0.8rem; text-align: center;">🗺️ Roadmap Advantage: Beyond Cost Tracking</h4>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; font-size: 0.8rem; text-align: center;">
+                        <div>
+                            <strong style="color: #ffffff;">Phase 1 (Q3/4 2025):</strong><br/>
+                            <span style="color: #e5e5e5;">MVP + Optimised AI Keys</span>
+                        </div>
+                        <div>
+                            <strong style="color: #ffffff;">Phase 2 (2026):</strong><br/>
+                            <span style="color: #e5e5e5;">Infrastructure Monitoring + Enterprise</span>
+                        </div>
+                        <div>
+                            <strong style="color: #ffffff;">Phase 3 (2026+):</strong><br/>
+                            <span style="color: #e5e5e5;">AI Network Insights Platform</span>
+                        </div>
+                        <div>
+                            <strong style="color: #ffffff;">Vision (2027+):</strong><br/>
+                            <span style="color: #e5e5e5;">Agentic AI Governance Layer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Value Prop -->
+                <div style="background: linear-gradient(135deg, #4c1d95, #7c3aed); padding: 1rem; border-radius: 15px; margin-top: 1rem; text-align: center; max-width: 1200px; margin-left: auto; margin-right: auto;">
+                    <p style="font-weight: bold; font-size: 1rem; margin: 0; color: white;">
+                        🎯 <strong>Why We Win:</strong> We're not just building AI monitoring - we're creating the central nervous system for enterprise AI operations. First-mover advantage in a market moving from "AI experimentation" to "AI governance."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Traction & Roadmap -->
+        <section class="slide slide-9">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 0.5rem 0; overflow-y: auto;">
+                <h2 style="margin-bottom: 1rem; font-size: 2.2rem;">Traction & Strategic Roadmap</h2>
+                <p style="font-size: 1rem; margin-bottom: 1.5rem; color: #e5e5e5; text-align: center;">From MVP to Market Leader: Our Execution Timeline</p>
+                
+                <!-- Linear Timeline -->
+                <div style="position: relative; max-width: 1200px; margin: 0 auto;">
+                    <!-- Timeline Line -->
+                    <div style="position: absolute; top: 80px; left: 5%; right: 5%; height: 4px; background: linear-gradient(90deg, #7c3aed 0%, #7c3aed 33%, #a855f7 66%, #4c1d95 100%); border-radius: 2px; z-index: 1;"></div>
+                    
+                    <!-- Timeline Points -->
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; position: relative; z-index: 2;">
+                        
+                        <!-- June 2025 - COMPLETED -->
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; background: #7c3aed; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; border: 4px solid #1a1a1a; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+                                <span style="color: white; font-size: 1.5rem; font-weight: bold;">✓</span>
+                            </div>
+                            <div style="background: rgba(124, 58, 237, 0.2); padding: 1rem; border-radius: 10px; border: 2px solid #7c3aed;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #ffffff;">June 2025</h4>
+                                <p style="font-size: 0.7rem; margin-bottom: 0.5rem; color: #7c3aed; font-weight: bold;">✅ COMPLETED</p>
+                                <p style="font-size: 0.65rem; margin: 0; color: #e5e5e5;">Problem validation, architecture designed, team assembled</p>
+                            </div>
+                        </div>
+
+                        <!-- July 2025 - CURRENT -->
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; background: #a855f7; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; border: 4px solid #1a1a1a; box-shadow: 0 4px 15px rgba(168, 85, 247, 0.6); animation: pulse 2s infinite;">
+                                <span style="color: white; font-size: 1.2rem; font-weight: bold;">⚡</span>
+                            </div>
+                            <div style="background: rgba(168, 85, 247, 0.2); padding: 1rem; border-radius: 10px; border: 2px solid #a855f7;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #ffffff;">July 2025</h4>
+                                <p style="font-size: 0.7rem; margin-bottom: 0.5rem; color: #a855f7; font-weight: bold;">🚀 MVP LAUNCH</p>
+                                <p style="font-size: 0.65rem; margin: 0; color: #e5e5e5;">Commercial platform: multi-model tracking, cost monitoring, Synthetic Groups</p>
+                            </div>
+                        </div>
+
+                        <!-- Q4 2025 - Phase 2 -->
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; background: #4c1d95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; border: 4px solid #1a1a1a;">
+                                <span style="color: white; font-size: 1.2rem; font-weight: bold;">🔑</span>
+                            </div>
+                            <div style="background: rgba(76, 29, 149, 0.2); padding: 1rem; border-radius: 10px; border: 1px solid #4c1d95;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #ffffff;">Q4 2025</h4>
+                                <p style="font-size: 0.7rem; margin-bottom: 0.5rem; color: #a855f7; font-weight: bold;">OPTIMISED AI KEYS</p>
+                                <p style="font-size: 0.65rem; margin: 0; color: #e5e5e5;">Smart routing proxy, 20-30% cost savings, 10 beta customers</p>
+                            </div>
+                        </div>
+
+                        <!-- Q1 2026 - Phase 3 -->
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; background: #4c1d95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; border: 4px solid #1a1a1a;">
+                                <span style="color: white; font-size: 1.2rem; font-weight: bold;">🏢</span>
+                            </div>
+                            <div style="background: rgba(76, 29, 149, 0.2); padding: 1rem; border-radius: 10px; border: 1px solid #4c1d95;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #ffffff;">Q1 2026</h4>
+                                <p style="font-size: 0.7rem; margin-bottom: 0.5rem; color: #a855f7; font-weight: bold;">ENTERPRISE READY</p>
+                                <p style="font-size: 0.65rem; margin: 0; color: #e5e5e5;">RBAC, SSO, Infrastructure monitoring, GPU usage tracking</p>
+                            </div>
+                        </div>
+
+                        <!-- Q2-Q3 2026 - Phase 4 -->
+                        <div style="text-align: center;">
+                            <div style="width: 60px; height: 60px; background: #4c1d95; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; border: 4px solid #1a1a1a;">
+                                <span style="color: white; font-size: 1.2rem; font-weight: bold;">🧠</span>
+                            </div>
+                            <div style="background: rgba(76, 29, 149, 0.2); padding: 1rem; border-radius: 10px; border: 1px solid #4c1d95;">
+                                <h4 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #ffffff;">Q2-Q3 2026</h4>
+                                <p style="font-size: 0.7rem; margin-bottom: 0.5rem; color: #a855f7; font-weight: bold;">AI INSIGHTS ENGINE</p>
+                                <p style="font-size: 0.65rem; margin: 0; color: #e5e5e5;">Network insights, industry benchmarks, ML training forecasting</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics & Competitive Advantage -->
+                <div style="display: flex; gap: 2rem; margin: 2rem auto; max-width: 1200px;">
+                    <!-- Current Metrics -->
+                    <div style="flex: 1; background: rgba(40, 36, 37, 0.6); padding: 1.2rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                        <h4 style="color: #7c3aed; margin-bottom: 0.8rem; text-align: center;">📊 Current Execution Metrics</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; text-align: center; margin-bottom: 0.8rem;">
+                            <div>
+                                <div style="font-size: 1.3rem; margin-bottom: 0.2rem; color: #7c3aed; font-weight: bold;">6</div>
+                                <div style="font-size: 0.65rem; color: #e5e5e5;">Weeks to MVP</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.3rem; margin-bottom: 0.2rem; color: #7c3aed; font-weight: bold;">4</div>
+                                <div style="font-size: 0.65rem; color: #e5e5e5;">Model Integrations</div>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.7rem; color: #e5e5e5; text-align: left; line-height: 1.3;">
+                            <div style="margin-bottom: 0.4rem;">• <strong>Team Expansion:</strong> Onboarding AI/ML developer</div>
+                            <div style="margin-bottom: 0.4rem;">• <strong>GTM Launch:</strong> Go-to-market motion starting end of July</div>
+                            <div>• <strong>Beta Pipeline:</strong> 10 enterprise prospects identified</div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2 Highlights -->
+                    <div style="flex: 1; background: rgba(40, 36, 37, 0.6); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                        <h4 style="color: #7c3aed; margin-bottom: 1rem; text-align: center;">🔑 Phase 2: Optimised AI Keys</h4>
+                        <ul style="font-size: 0.8rem; line-height: 1.4; color: #e5e5e5; margin: 0; padding-left: 1rem;">
+                            <li>Revolutionary proxy architecture</li>
+                            <li>Smart model routing & cost optimization</li>
+                            <li>20-30% cost savings demonstrated</li>
+                            <li>Enterprise security & governance controls</li>
+                        </ul>
+                    </div>
+
+                    <!-- Phase 3 Highlights -->
+                    <div style="flex: 1; background: rgba(40, 36, 37, 0.6); padding: 1.5rem; border-radius: 15px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                        <h4 style="color: #7c3aed; margin-bottom: 1rem; text-align: center;">🏢 Phase 3: Infrastructure Layer</h4>
+                        <ul style="font-size: 0.8rem; line-height: 1.4; color: #e5e5e5; margin: 0; padding-left: 1rem;">
+                            <li>GPU & cloud infrastructure monitoring</li>
+                            <li>Real-time alerts for high-cost deployments</li>
+                            <li>MFU tracking & efficiency optimization</li>
+                            <li>Complete AI cost visibility stack</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Strategic Value Proposition -->
+                <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1.2rem; border-radius: 15px; margin: 0 auto; max-width: 1200px; text-align: center;">
+                    <p style="font-weight: bold; font-size: 0.95rem; margin: 0; color: white;">
+                        🎯 <strong>Strategic Execution:</strong> Each phase builds competitive moats — from usage tracking to cost optimization to infrastructure governance — creating the definitive AI operations platform before competitors can catch up.
+                    </p>
+                </div>
+
+                <!-- CSS for pulse animation -->
+                <style>
+                @keyframes pulse {
+                    0% { box-shadow: 0 4px 15px rgba(168, 85, 247, 0.6); }
+                    50% { box-shadow: 0 4px 25px rgba(168, 85, 247, 0.9), 0 0 30px rgba(168, 85, 247, 0.4); }
+                    100% { box-shadow: 0 4px 15px rgba(168, 85, 247, 0.6); }
+                }
+                </style>
+            </div>
+        </section>
+
+        <!-- Slide 10: Team -->
+        <section class="slide slide-10">
+            <div class="slide-content" style="max-width: 1100px;">
+                <h2 style="margin-bottom: 2rem;">Founder & Team</h2>
+                
+                <!-- Key Leadership -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <!-- Dave Maddock -->
+                    <div class="team-card" style="padding: 2rem; margin: 0;">
+                        <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                            <div style="flex-shrink: 0;">
+                                <img src="1.png" alt="Dave Maddock - Founder" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #7c3aed; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+                            </div>
+                            <div style="flex: 1;">
+                                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Dave Maddock</h3>
+                                <h4 style="color: #7c3aed; font-size: 1rem; margin-bottom: 1rem;">Founder & CEO</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.4; margin-bottom: 1.5rem;">Ex-military officer with 10 years as cloud architect. 4+ years at forefront of Cloud FinOps. Brings technical foundation, strategic vision, and product-led growth mindset.</p>
+                                
+                                <!-- Previous Experience -->
+                                <div style="margin-top: 0.5rem;">
+                                    <div style="font-size: 0.8rem; color: #a855f7; margin-bottom: 0.5rem;">Previous Experience with:</div>
+                                    <p style="font-size: 0.85rem; color: #e5e5e5; line-height: 1.3; margin: 0;">Monzo, Deloitte, Vodafone, VirginMedia O2, Philips, IAG, M&G, HSBC, British Army</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Kevin Thompson -->
+                    <div class="team-card" style="padding: 2rem; margin: 0;">
+                        <div style="display: flex; align-items: flex-start; gap: 1.5rem;">
+                            <div style="flex-shrink: 0;">
+                                <img src="image.png" alt="Kevin Thompson - Strategic Advisor" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #7c3aed; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);">
+                            </div>
+                            <div style="flex: 1;">
+                                <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">Kevin Thompson</h3>
+                                <h4 style="color: #7c3aed; font-size: 1rem; margin-bottom: 1rem;">Strategic Advisor</h4>
+                                <p style="font-size: 0.95rem; line-height: 1.4; margin-bottom: 1.5rem;">Strategic advisor with extensive experience in enterprise AI implementations and go-to-market strategy.</p>
+                                
+                                <!-- Previous Experience -->
+                                <div style="margin-top: 0.5rem;">
+                                    <div style="font-size: 0.8rem; color: #a855f7; margin-bottom: 0.5rem;">Previous Experience with:</div>
+                                    <p style="font-size: 0.85rem; color: #e5e5e5; line-height: 1.3; margin: 0;">Boeing, Rolls Royce, GM, Ford, Ministry of Defence</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Current Team & Quote -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+                    <div class="feature-card" style="padding: 1.5rem;">
+                        <h4 style="font-size: 1.2rem; margin-bottom: 1rem;">Current Team</h4>
+                        <ul style="font-size: 0.9rem; line-height: 1.4;">
+                            <li>Product Manager</li>
+                            <li>4 Offshore Developers</li>
+                            <li>Growth and Marketing Lead</li>
+                            <li>1 x SDR</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="quote" style="padding: 1.5rem; margin: 0;">
+                        <p style="font-size: 0.95rem; line-height: 1.4;">"I'm working closely with a number of offshore resources, these are people I've worked with before, trust and have confidence in their technical capability."</p>
+                        <p style="text-align: right; margin-top: 1rem; font-size: 0.85rem;"><strong>— Dave Maddock</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11: The Ask -->
+        <section class="slide slide-11">
+            <div class="slide-content" style="max-height: calc(100vh - 4rem); padding: 1rem 0;">
+                <h2 style="margin-bottom: 1rem;">The Ask: Pre Seed Funding</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 1.5rem;">We have already built and tested our MVP that is launching end of July 2025.</p>
+                
+                <div class="funding-ask" style="gap: 3rem; margin: 1.5rem 0;">
+                    <div class="funding-amount" style="padding: 2rem;">
+                        <div class="big-number" style="font-size: 3rem;">£800K</div>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">Investment for 10% equity</p>
+                    </div>
+                    <div class="funding-amount" style="padding: 2rem;">
+                        <div class="big-number" style="font-size: 3rem;">£8M</div>
+                        <p style="font-size: 1.1rem; margin-top: 1rem;">Post-money Valuation</p>
+                    </div>
+                </div>
+
+                <!-- Detailed Funding Breakdown -->
+                <h3 style="margin-bottom: 1rem; text-align: center;">Strategic Fund Allocation - Optimized for Low CAC</h3>
+                <div style="background: rgba(40, 36, 37, 0.6); border-radius: 15px; padding: 1.5rem; margin: 1rem auto; max-width: 900px; backdrop-filter: blur(10px); border: 1px solid rgba(124, 58, 237, 0.2);">
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                        <!-- Left Column -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.8rem; background: rgba(124, 58, 237, 0.2); border-radius: 10px;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 0.3rem;">🎯 Product-Led Growth (40% - £320K)</h4>
+                                    <p style="font-size: 0.8rem; margin: 0; color: #e5e5e5;">Low-touch, self-serve acquisition strategy</p>
+                                </div>
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed;">40%</div>
+                            </div>
+                            <ul style="font-size: 0.85rem; margin-left: 1rem; color: #e5e5e5;">
+                                <li>Growth Marketing Lead (£100K)</li>
+                                <li>Content & SEO optimization (£60K)</li>
+                                <li>Free tier + freemium model (£80K dev)</li>
+                                <li>Cloud marketplace listings (£80K)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.8rem; background: rgba(124, 58, 237, 0.2); border-radius: 10px;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 0.3rem;">🛡️ Enterprise Foundation (30% - £240K)</h4>
+                                    <p style="font-size: 0.8rem; margin: 0; color: #e5e5e5;">Remove enterprise sales barriers</p>
+                                </div>
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed;">30%</div>
+                            </div>
+                            <ul style="font-size: 0.85rem; margin-left: 1rem; color: #e5e5e5;">
+                                <li>SOC2 & ISO27001 compliance (£140K)</li>
+                                <li>Enterprise security features (£60K)</li>
+                                <li>Legal & regulatory setup (£40K)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1rem;">
+                        <!-- Technical Excellence -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.8rem; background: rgba(124, 58, 237, 0.2); border-radius: 10px;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 0.3rem;">⚙️ Technical Excellence (20% - £160K)</h4>
+                                    <p style="font-size: 0.8rem; margin: 0; color: #e5e5e5;">Product refinement & scalability</p>
+                                </div>
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed;">20%</div>
+                            </div>
+                            <ul style="font-size: 0.85rem; margin-left: 1rem; color: #e5e5e5;">
+                                <li>3 Senior Engineers (£120K)</li>
+                                <li>Infrastructure & scaling (£40K)</li>
+                            </ul>
+                        </div>
+
+                        <!-- Strategic Sales -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; margin-bottom: 0.8rem; background: rgba(124, 58, 237, 0.2); border-radius: 10px;">
+                                <div>
+                                    <h4 style="font-size: 1rem; margin-bottom: 0.3rem;">🤝 Strategic Sales (10% - £80K)</h4>
+                                    <p style="font-size: 0.8rem; margin: 0; color: #e5e5e5;">High-value enterprise accounts</p>
+                                </div>
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #7c3aed;">10%</div>
+                            </div>
+                            <ul style="font-size: 0.85rem; margin-left: 1rem; color: #e5e5e5;">
+                                <li>1 Enterprise AE (£80K full year)</li>
+                                <li>Focus on Fortune 500 early adopters</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Low CAC Strategy Callout -->
+                <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1rem; border-radius: 15px; margin: 1rem auto; max-width: 900px; text-align: center;">
+                    <p style="font-weight: bold; font-size: 0.95rem; margin: 0; color: white;">💡 <strong>Low CAC Strategy:</strong> 70% of funding focused on product-led growth and removing enterprise barriers, minimizing traditional sales spend. Target CAC: &lt;£800 per customer in Year 1.</p>
+                </div>
+                
+                <div class="quote" style="margin-top: 1rem; padding: 1rem;">
+                    <p style="font-size: 0.95rem;">"Our funding strategy prioritizes sustainable, low-cost customer acquisition. We're building the data platform that enterprises will need as AI becomes mission-critical."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12: Next Steps -->
+        <section class="slide slide-12">
+            <div class="slide-content">
+                <h2>Next Steps</h2>
+                <h3 style="margin-bottom: 3rem;">Looking for partners who:</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin: 3rem 0;">
+                    <div class="feature-card">
+                        <h4>01</h4>
+                        <p><strong>Share our belief</strong> in the operational layer for GenAI</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>02</h4>
+                        <p><strong>Understand the demand</strong> for AI spend control and governance</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>03</h4>
+                        <p><strong>Want to help build</strong> the gold standard in AI observability</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>04</h4>
+                        <p><strong>Can open doors</strong> within large Enterprises</p>
+                    </div>
+                </div>
+
+                <div style="margin-top: 4rem;">
+                    <h1 style="font-size: 2.5rem;">LET'S WRANGLE THE AI FRONTIER — TOGETHER.</h1>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13: Contact -->
+        <section class="slide slide-13">
+            <div class="slide-content">
+                <div style="margin-bottom: 2rem;">
+                    <img src="brand elements/whitelogo.png" alt="WrangleAI Logo" style="height: 80px; width: auto; filter: drop-shadow(0 4px 12px rgba(124, 58, 237, 0.4));">
+                </div>
+                <h2>Contact</h2>
+                <h3 style="margin-bottom: 2rem;">For a demo or to discuss next steps:</h3>
+                
+                <div class="contact-info">
+                    <h3>Dave Maddock - Founder</h3>
+                    <p style="font-size: 1.5rem; margin: 2rem 0;">
+                        📧 <strong>Email:</strong> dave@wrangleai.com
+                    </p>
+                    <p style="font-size: 1.5rem;">
+                        📱 <strong>Phone:</strong> +44 7901102559
+                    </p>
+                </div>
+                
+                <div style="margin-top: 3rem;">
+                    <h1 style="font-size: 2.5rem; color: #7c3aed;">Ready to Wrangle Your AI?</h1>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="scroll-indicator">
+        ← Scroll horizontally to navigate →
+    </div>
+
+    <script>
+        // Password protection
+        function checkPassword() {
+            const correctPassword = "readytoinvest";
+            const enteredPassword = document.getElementById('passwordInput').value;
+            
+            if (enteredPassword === correctPassword) {
+                document.getElementById('passwordOverlay').style.display = 'none';
+                document.querySelector('.presentation-container').style.display = 'flex';
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+            }
+        }
+        
+        // Allow Enter key to submit password
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // Keyboard navigation for slides
+        const container = document.querySelector('.presentation-container');
+        const slideWidth = window.innerWidth;
+
+        document.addEventListener('keydown', function(e) {
+            
+            if (e.key === 'ArrowRight') {
+                container.scrollBy({ left: slideWidth, behavior: 'smooth' });
+            } else if (e.key === 'ArrowLeft') {
+                container.scrollBy({ left: -slideWidth, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html> 
