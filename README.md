@@ -10,8 +10,7 @@ This folder contains all assets, files, and documentation for the WrangleAI inve
 ## 📁 **FILE STRUCTURE**
 
 ### **Core Presentation Files**
-- **`wrangleai_presentation.html`** - Main presentation source file (master copy for editing)
-- **`index.html`** - GitHub Pages deployment copy (automatically generated from main file)
+- **`index.html`** - Main presentation file (master copy for editing and deployment)
 
 ### **Brand Assets**
 - **`brand elements/`** - Directory containing all WrangleAI brand assets:
@@ -39,23 +38,20 @@ This folder contains all assets, files, and documentation for the WrangleAI inve
 
 ### **CRITICAL RULES FOR AI MODELS:**
 
-1. **ALWAYS EDIT THE MASTER FILE**: Make changes to `wrangleai_presentation.html` (NOT `index.html`)
-2. **PRESERVE STRUCTURE**: The HTML uses a reveal.js framework - maintain the section structure
+1. **EDIT THE MASTER FILE**: Make changes to `index.html` (this is the master and deployment file)
+2. **PRESERVE STRUCTURE**: The HTML uses a custom slide framework - maintain the section structure
 3. **IMAGE PATHS**: All images use relative paths - maintain the folder structure
-4. **COPY TO INDEX**: After editing, always copy the master file to `index.html` for deployment
+4. **TEST LOCALLY**: Open `index.html` in browser to test changes before deployment
 
 ### **Safe Editing Process:**
 ```bash
-# 1. Edit the master presentation file
-# Edit: wrangleai_presentation.html
+# 1. Edit the presentation file
+# Edit: index.html
 
-# 2. Copy to deployment file
-cp wrangleai_presentation.html index.html
-
-# 3. Test locally (if needed)
+# 2. Test locally
 # Open index.html in browser
 
-# 4. Deploy to GitHub (if authorized)
+# 3. Deploy to GitHub (if authorized)
 git add .
 git commit -m "Update presentation: [describe changes]"
 git push origin main
@@ -103,16 +99,15 @@ Changes pushed to the main branch automatically deploy to GitHub Pages within 2-
 
 #### **DO:**
 - ✅ Always read this README first for context
-- ✅ Edit `wrangleai_presentation.html` as the master file
-- ✅ Maintain the reveal.js slide structure (`<section>` tags)
+- ✅ Edit `index.html` as the master file
+- ✅ Maintain the custom slide structure (`<section>` tags)
 - ✅ Keep image references relative and intact
-- ✅ Test changes by copying to `index.html`
+- ✅ Test changes by opening `index.html` in browser
 - ✅ Preserve existing animations and transitions
 - ✅ Follow the established design language
 
 #### **DON'T:**
-- ❌ Directly edit `index.html` (it's a deployment copy)
-- ❌ Break the reveal.js framework structure
+- ❌ Break the custom slide framework structure
 - ❌ Change image file paths without updating HTML
 - ❌ Remove or modify brand assets without explicit approval
 - ❌ Change the core presentation flow without understanding the investor journey

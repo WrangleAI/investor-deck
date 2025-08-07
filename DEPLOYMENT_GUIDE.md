@@ -1,7 +1,7 @@
 # WrangleAI Presentation Deployment Guide
 
 ## 🔐 Password Protection
-**Access Code:** `ireallyshouldinvestinthisbusiness`
+**Access Code:** `readytoinvest`
 
 ## 🚀 Quick Deploy Options
 
@@ -25,13 +25,12 @@
 ## 📱 Sharing Instructions
 **Send to investors:**
 - URL: [Your deployment URL]
-- Password: `ireallyshouldinvestinthisbusiness`
+- Password: `readytoinvest`
 - Works on all devices
 - Horizontal scrolling navigation
 
 ## 🔧 Files Included
-- `index.html` - Main presentation file (ready for deployment)
-- `wrangleai_presentation.html` - Original working file
+- `index.html` - Main presentation file (master copy for editing and deployment)
 - All brand assets in `brand elements/` folder
 
 ## 📊 Features
