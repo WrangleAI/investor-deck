@@ -850,6 +850,12 @@
                 margin: 1rem auto !important;
             }
 
+            /* Market circles mobile with sources */
+            .slide-5 .market-circle div[style*="font-size: 0.65rem"] {
+                font-size: 0.6rem !important;
+                line-height: 1.1 !important;
+            }
+
             /* Slide 6 usage validation mobile */
             .slide-6 div[style*="grid-template-columns: repeat(2, 1fr)"] {
                 grid-template-columns: 1fr !important;
@@ -1081,14 +1087,17 @@
                         <div style="background: rgba(40, 36, 37, 0.8); padding: 1.5rem; border-radius: 20px; border: 2px solid rgba(124, 58, 237, 0.5);">
                             <div style="font-size: 2.5rem; font-weight: bold; color: #7c3aed;">$185B</div>
                             <div style="font-size: 1rem; color: #e5e5e5;">2023 Market</div>
+                            <div style="font-size: 0.75rem; color: #a855f7; margin-top: 0.3rem;">(Statista Global AI Report)</div>
                         </div>
                         <div style="font-size: 3rem; color: #7c3aed;">→</div>
                         <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1.5rem; border-radius: 20px; box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);">
                             <div style="font-size: 2.5rem; font-weight: bold; color: #ffffff;">$990B</div>
                             <div style="font-size: 1rem; color: #ffffff;">2027 Projected</div>
+                            <div style="font-size: 0.75rem; color: #ffffff; margin-top: 0.3rem;">(IDC Worldwide AI Forecast)</div>
                         </div>
                     </div>
-                    <div style="color: #7c3aed; font-size: 1.2rem; font-weight: bold;">40-55% Annual Growth (Bain & Company 2024)</div>
+                    <div style="color: #7c3aed; font-size: 1.2rem; font-weight: bold;">40-55% Annual Growth</div>
+                    <div style="color: #a855f7; font-size: 0.9rem; margin-top: 0.3rem;">(Bain & Company "AI Revolution Report" 2024 + IDC Market Forecast)</div>
                 </div>
 
                 <div style="display: flex; align-items: flex-start; gap: 2.5rem; max-width: 1100px; margin: 0 auto;">
@@ -1099,11 +1108,13 @@
                         <div class="features-grid" style="margin: 1rem 0; grid-template-columns: 1fr 1fr;">
                             <div class="feature-card" style="padding: 1rem;">
                                 <h4 style="font-size: 1.1rem;">📊 78% of orgs</h4>
-                                <p style="font-size: 0.9rem;">Now use AI in at least one function (McKinsey 2024)</p>
+                                <p style="font-size: 0.9rem;">Now use AI in at least one function</p>
+                                <div style="font-size: 0.75rem; color: #a855f7; margin-top: 0.3rem;">(McKinsey "State of AI" 2024)</div>
                             </div>
                             <div class="feature-card" style="padding: 1rem;">
                                 <h4 style="font-size: 1.1rem;">📈 175 zettabytes</h4>
-                                <p style="font-size: 0.9rem;">Global data by 2025 - feeding AI hunger (IDC)</p>
+                                <p style="font-size: 0.9rem;">Global data by 2025 - feeding AI hunger</p>
+                                <div style="font-size: 0.75rem; color: #a855f7; margin-top: 0.3rem;">(IDC Global DataSphere Report)</div>
                             </div>
                         </div>
 
@@ -1147,16 +1158,19 @@
                                 <div class="market-value" style="font-size: 1.3rem;">$45B</div>
                                 <div class="market-label" style="font-size: 0.8rem;">Total Addressable Market</div>
                                 <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">TAM</div>
+                                <div style="font-size: 0.65rem; color: #a855f7; margin-top: 0.3rem; line-height: 1.2;">(Forrester AI + McKinsey optimization data)</div>
                             </div>
                             <div class="market-circle" style="width: 150px; height: 150px;">
                                 <div class="market-value" style="font-size: 1.3rem;">$12B</div>
                                 <div class="market-label" style="font-size: 0.8rem;">Serviceable Available Market</div>
                                 <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">SAM</div>
+                                <div style="font-size: 0.65rem; color: #a855f7; margin-top: 0.3rem; line-height: 1.2;">(Enterprise subset, Accenture 2024)</div>
                             </div>
                             <div class="market-circle" style="width: 150px; height: 150px;">
                                 <div class="market-value" style="font-size: 1.3rem;">$360M</div>
                                 <div class="market-label" style="font-size: 0.8rem;">Serviceable Obtainable Market</div>
                                 <div class="market-label" style="font-weight: bold; font-size: 0.9rem;">SOM</div>
+                                <div style="font-size: 0.65rem; color: #a855f7; margin-top: 0.3rem; line-height: 1.2;">(3% competitive capture rate)</div>
                             </div>
                         </div>
 
@@ -1354,10 +1368,10 @@
                         <div>
                             <h5 style="color: #7c3aed; margin-bottom: 0.8rem; font-size: 0.9rem;">📊 Market Benchmarks</h5>
                             <ul style="font-size: 0.75rem; color: #ffffff; margin: 0; padding-left: 1rem; line-height: 1.4;">
-                                <li><strong>Datadog:</strong> 70% usage-based revenue by Year 3</li>
-                                <li><strong>Snowflake:</strong> $500K+ ARPU from usage model</li>
-                                <li><strong>Twilio:</strong> 2-3x faster growth through usage pricing</li>
-                                <li><strong>AWS AI Services:</strong> Pay-per-call drives 80%+ revenue</li>
+                                <li><strong>Datadog:</strong> 70% usage-based revenue by Year 3 <span style="color: #a855f7; font-size: 0.7rem;">(SEC 10-K filings)</span></li>
+                                <li><strong>Snowflake:</strong> $500K+ ARPU from usage model <span style="color: #a855f7; font-size: 0.7rem;">(Q4 2023 earnings)</span></li>
+                                <li><strong>Twilio:</strong> 2-3x faster growth through usage pricing <span style="color: #a855f7; font-size: 0.7rem;">(Investor presentations)</span></li>
+                                <li><strong>AWS AI Services:</strong> Pay-per-call drives 80%+ revenue <span style="color: #a855f7; font-size: 0.7rem;">(AWS re:Invent 2023)</span></li>
                             </ul>
                         </div>
                         <div>
@@ -1445,6 +1459,15 @@
                         <div style="text-align: center; font-size: 0.7rem; color: #ffffff;">🔴 No</div>
                     </div>
 
+                    <!-- Arize -->
+                    <div style="display: grid; grid-template-columns: 1.3fr 1.2fr 1.8fr 2.2fr 1.5fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
+                        <div style="background: rgba(255,255,255,0.15); padding: 0.4rem; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: #ffffff;">Arize</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #ffffff;">ML Engineers, Data Scientists</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #ffffff;">AI observability & evaluation</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #ffffff;">No cost optimization, no multi-provider routing, complex technical setup</div>
+                        <div style="text-align: center; font-size: 0.7rem; color: #ffffff;">🟡 Partial</div>
+                    </div>
+
                     <!-- Cloud Provider AI Tools -->
                     <div style="display: grid; grid-template-columns: 1.3fr 1.2fr 1.8fr 2.2fr 1.5fr; gap: 0.5rem; margin-bottom: 0.5rem; align-items: center;">
                         <div style="background: rgba(255,255,255,0.15); padding: 0.4rem; border-radius: 6px; font-size: 0.75rem; font-weight: bold; color: #ffffff;">AWS/Azure AI</div>
@@ -1478,7 +1501,7 @@
                 <!-- Bottom Line Summary -->
                 <div style="background: linear-gradient(135deg, #7c3aed, #a855f7); padding: 1.5rem; border-radius: 15px; margin: 1rem 0; text-align: center;">
                     <h3 style="margin: 0 0 1rem 0; color: white; font-size: 1.2rem;">🏆 The Bottom Line</h3>
-                    <p style="font-weight: bold; font-size: 1rem; margin: 0; color: white;">WrangleAI is the only solution purpose-built for enterprise AI governance. While competitors focus on developers, we serve the C-suite with the intelligence they need to control AI spend and maximize ROI.</p>
+                    <p style="font-weight: bold; font-size: 1rem; margin: 0; color: white;">WrangleAI is the only solution purpose-built for enterprise AI governance. While Arize focuses on technical observability and others serve developers, we serve the C-suite with cost control and ROI optimization.</p>
                 </div>
 
                 <!-- Core Differentiators Grid -->
