@@ -19,7 +19,6 @@ Thumbs.db
 *.backup
 
 # Editor files
-.vscode/
 .idea/
 *.sublime-*
 
